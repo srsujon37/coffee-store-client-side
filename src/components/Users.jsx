@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 const Users = () => {
 
     const initialUsers = useLoaderData();
-    const [users, setUsers] = useState(initialUsers)
+    const [users, setUsers] = useState(initialUsers) 
 
     const handleDelete = (id) =>{
         Swal.fire({
@@ -18,7 +18,7 @@ const Users = () => {
             confirmButtonText: "Yes, delete it!"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch(`https://coffee-store-server-side-nine.vercel.app/users/${id}`, {
+                    fetch(`http://localhost:3000/users/${id}`, {
                         method: "DELETE",
                     })
                     .then(res => res.json())
@@ -28,7 +28,8 @@ const Users = () => {
                             const remainingUsers = users.filter(user => user._id !== id);
                              setUsers(remainingUsers)
 
-                            //  TODO Delete user from firebase
+                            // TODO Delete user from firebase
+
                             Swal.fire({
                                 title: "Deleted!",
                                 text: "Your file has been deleted.",

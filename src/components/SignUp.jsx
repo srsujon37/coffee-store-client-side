@@ -1,6 +1,7 @@
 import React, { use } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const SignUp = () => {
         
@@ -22,6 +23,7 @@ const SignUp = () => {
         // const password = formData.get('password')
         // console.log(email, password, userProfile);
 
+
         // create user in the fireBase
         createUser(email, password)
             .then(result =>{
@@ -33,27 +35,39 @@ const SignUp = () => {
                     creationTime: result.user?.metadata?.creationTime,
                     lastSignInTime: result.user?.metadata?.lastSignInTime,
                 }
+                // new user has been created
+                const createdAt = result.user?.metadata?.creationTime;
+                const user = { email, createdAt: createdAt}
 
+                // using Axios===========>
+                axios.post('http://localhost:3000/users',user) 
+                    .then(data =>{
+                        if (data.data.insertedId) {
+                            console.log('data added to the database');
+                        }
+                    })
+
+                // using Fetch
                 // save profile info in the database
-                fetch('https://coffee-store-server-side-nine.vercel.app/users',{
-                    method: 'POST',
-                    headers: {
-                        'content-type' : 'application/json'
-                    },
-                    body: JSON.stringify(userProfile)
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.insertedId) {
-                            Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: "Your account is created",
-                            showConfirmButton: false,
-                            timer: 1500
-                            });
-                    }
-                })
+                // fetch('http://localhost:3000/users',{
+                //     method: 'POST',
+                //     headers: {
+                //         'content-type' : 'application/json'
+                //     },
+                //     body: JSON.stringify(userProfile)
+                // })
+                // .then(res => res.json())
+                // .then(data => {
+                //     if (data.insertedId) {
+                //             Swal.fire({
+                //             position: "top-end",
+                //             icon: "success",
+                //             title: "Your account is created",
+                //             showConfirmButton: false,
+                //             timer: 1500
+                //             });
+                //     }
+                // })
             })
             .catch(error =>{
                 console.log(error);
